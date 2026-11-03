@@ -1,124 +1,150 @@
-local player = game.Players.LocalPlayer
-local coreGui = pcall(function() return game:GetService("CoreGui") end) and game:GetService("CoreGui") or player:WaitForChild("PlayerGui")
+-- Membuat ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local TopBar = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local MinimizeBtn = Instance.new("TextButton")
+local ScrollFrame = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
 
--- Membuat ScreenGui Utama
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "BunkerTeleportGui"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = coreGui
+-- Konfigurasi ScreenGui
+ScreenGui.Name = "BungkerTeleportGUI"
+ScreenGui.Parent = game.CoreGui or game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
 
--- Main Frame (Menu)
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 160, 0, 220)
-mainFrame.Position = UDim2.new(0.8, 0, 0.4, 0)
-mainFrame.BackgroundColor3 = Color3.fromRGB(218, 165, 32) -- Warna Emas
-mainFrame.BorderSizePixel = 2
-mainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-mainFrame.Active = true
-mainFrame.Draggable = true
-mainFrame.Parent = screenGui
+-- Konfigurasi MainFrame (Latar belakang emas & ukuran compact)
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(255, 215, 0) -- Warna Emas
+MainFrame.Position = UDim2.new(0.05, 0, 0.3, 0)
+MainFrame.Size = UDim2.new(0, 200, 0, 250)
+MainFrame.Active = true
+MainFrame.Draggable = true -- Membuat menu bisa digeser
 
--- Top Bar (Header)
-local topBar = Instance.new("Frame")
-topBar.Size = UDim2.new(1, 0, 0, 25)
-topBar.BackgroundColor3 = Color3.fromRGB(184, 134, 11) -- Emas Gelap
-topBar.BorderSizePixel = 0
-topBar.Parent = mainFrame
+-- Konfigurasi TopBar
+TopBar.Name = "TopBar"
+TopBar.Parent = MainFrame
+TopBar.BackgroundColor3 = Color3.fromRGB(218, 165, 32) -- Warna Emas Gelap
+TopBar.Size = UDim2.new(1, 0, 0, 30)
 
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -30, 1, 0)
-title.Position = UDim2.new(0, 5, 0, 0)
-title.BackgroundTransparency = 1
-title.Text = "BUNGKER"
-title.Font = Enum.Font.Code
-title.TextSize = 14
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.Parent = topBar
+-- Konfigurasi Judul
+Title.Name = "Title"
+Title.Parent = TopBar
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.Size = UDim2.new(0.7, 0, 1, 0)
+Title.Font = Enum.Font.SourceSansBold
+Title.Text = "BUNGKER"
+Title.TextColor3 = Color3.fromRGB(0, 0, 0)
+Title.TextSize = 18
+Title.TextXAlignment = Enum.TextXAlignment.Left
 
-local minimizeBtn = Instance.new("TextButton")
-minimizeBtn.Size = UDim2.new(0, 30, 1, 0)
-minimizeBtn.Position = UDim2.new(1, -30, 0, 0)
-minimizeBtn.BackgroundTransparency = 1
-minimizeBtn.Text = "-"
-minimizeBtn.Font = Enum.Font.Code
-minimizeBtn.TextSize = 18
-minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-minimizeBtn.Parent = topBar
+-- Konfigurasi Tombol Minimize ("-")
+MinimizeBtn.Name = "MinimizeBtn"
+MinimizeBtn.Parent = TopBar
+MinimizeBtn.BackgroundTransparency = 1
+MinimizeBtn.Position = UDim2.new(0.8, 0, 0, 0)
+MinimizeBtn.Size = UDim2.new(0.2, 0, 1, 0)
+MinimizeBtn.Font = Enum.Font.SourceSansBold
+MinimizeBtn.Text = "-"
+MinimizeBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+MinimizeBtn.TextSize = 24
 
--- Scrolling Frame (Wadah Tombol)
-local scrollFrame = Instance.new("ScrollingFrame")
-scrollFrame.Size = UDim2.new(1, 0, 1, -25)
-scrollFrame.Position = UDim2.new(0, 0, 0, 25)
-scrollFrame.BackgroundTransparency = 1
-scrollFrame.ScrollBarThickness = 3
-scrollFrame.Parent = mainFrame
+-- Konfigurasi ScrollingFrame (Untuk menu scroll)
+ScrollFrame.Name = "ScrollFrame"
+ScrollFrame.Parent = MainFrame
+ScrollFrame.Active = true
+ScrollFrame.BackgroundColor3 = Color3.fromRGB(255, 223, 0)
+ScrollFrame.BorderSizePixel = 0
+ScrollFrame.Position = UDim2.new(0, 0, 0, 30)
+ScrollFrame.Size = UDim2.new(1, 0, 1, -30)
+ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 320) -- Sesuaikan jika tombol bertambah
+ScrollFrame.ScrollBarThickness = 5
 
-local uiListLayout = Instance.new("UIListLayout")
-uiListLayout.Parent = scrollFrame
-uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-uiListLayout.Padding = UDim.new(0, 3)
+-- Konfigurasi Layout Daftar Tombol
+UIListLayout.Parent = ScrollFrame
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 5)
 
-local uiPadding = Instance.new("UIPadding")
-uiPadding.Parent = scrollFrame
-uiPadding.PaddingTop = UDim.new(0, 4)
-uiPadding.PaddingBottom = UDim.new(0, 4)
-uiPadding.PaddingLeft = UDim.new(0, 4)
-uiPadding.PaddingRight = UDim.new(0, 4)
-
--- Logika Teleportasi
-local function teleportTo(partFunction)
-    local success, targetPart = pcall(partFunction)
-    if success and targetPart and targetPart:IsA("BasePart") then
-        local char = player.Character or player.CharacterAdded:Wait()
-        local hrp = char:FindFirstChild("HumanoidRootPart")
-        if hrp then
-            hrp.CFrame = targetPart.CFrame + Vector3.new(0, 3, 0)
-        end
+-- Fungsi Minimize/Maximize
+local isMinimized = false
+MinimizeBtn.MouseButton1Click:Connect(function()
+    isMinimized = not isMinimized
+    if isMinimized then
+        MainFrame.Size = UDim2.new(0, 200, 0, 30)
+        ScrollFrame.Visible = false
+        MinimizeBtn.Text = "+"
+    else
+        MainFrame.Size = UDim2.new(0, 200, 0, 250)
+        ScrollFrame.Visible = true
+        MinimizeBtn.Text = "-"
     end
-end
+end)
 
--- Daftar Lokasi
-local locations = {
-    {name = "0 Labu",   func = function() return game:GetService("Workspace").AirDROP.Cube end},
-    {name = "1 Rumah",  func = function() return game:GetService("Workspace").Bunkers["8693354055_Bunker"].Stairs.Part end},
-    {name = "2 GL",     func = function() return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.WallDecor2["1"] end},
-    {name = "3 Salon",  func = function() return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.BTScreen["2"] end},
-    {name = "4 Marmer", func = function() return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.KitchenIsland1["2"] end},
-    {name = "5 Lemari", func = function() return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.Shelf2["1"] end},
-    {name = "6 Lampu",  func = function() return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.Lamp4["2"] end},
-    {name = "7 Meja",   func = function() return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.Table2["2"] end},
-    {name = "8 Toilet", func = function() return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.WashingMachine1["1"] end}
-}
-
--- Membuat Tombol
-for _, loc in ipairs(locations) do
+-- Fungsi Membuat Tombol Teleport
+local function CreateTPButton(name, targetPath)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 22)
-    btn.BackgroundColor3 = Color3.fromRGB(255, 235, 150)
-    btn.BorderSizePixel = 1
-    btn.BorderColor3 = Color3.fromRGB(150, 120, 0)
-    btn.Text = loc.name
-    btn.Font = Enum.Font.Code
-    btn.TextSize = 12
+    btn.Name = name
+    btn.Parent = ScrollFrame
+    btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Size = UDim2.new(1, -10, 0, 30)
+    btn.Position = UDim2.new(0, 5, 0, 0)
+    btn.Font = Enum.Font.SourceSansSemibold
+    btn.Text = name
     btn.TextColor3 = Color3.fromRGB(0, 0, 0)
-    btn.Parent = scrollFrame
+    btn.TextSize = 14
     
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 4)
+    UICorner.Parent = btn
+
     btn.MouseButton1Click:Connect(function()
-        teleportTo(loc.func)
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            pcall(function()
+                -- Mengambil lokasi dari targetPath
+                local target = targetPath()
+                if target then
+                    player.Character.HumanoidRootPart.CFrame = target.CFrame
+                end
+            end)
+        end
     end)
 end
 
--- Menyesuaikan ukuran scroll area otomatis
-uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y + 8)
+-- Mendaftar Lokasi Teleport (Note: angka pada path direferensikan menggunakan kurung siku ["1"])
+CreateTPButton("1. Teleport ke Labu", function()
+    return game:GetService("Workspace"):FindFirstChild("AirDROP") and game.Workspace.AirDROP:FindFirstChild("Cube")
 end)
 
--- Logika Minimize
-local isMinimized = false
-minimizeBtn.MouseButton1Click:Connect(function()
-    isMinimized = not isMinimized
-    if isMinimized then
-        mainFrame.Size = UDim2.new(0, 160, 0, 25)
-        scrollFrame.Visible = false
-        minimizeBtn.Text = "+"
+CreateTPButton("2. Teleport ke Rumah", function()
+    return game:GetService("Workspace"):FindFirstChild("Bunkers") and game.Workspace.Bunkers:FindFirstChild("8693354055_Bunker") and game.Workspace.Bunkers["8693354055_Bunker"]:FindFirstChild("Stairs") and game.Workspace.Bunkers["8693354055_Bunker"].Stairs:FindFirstChild("Part")
+end)
+
+CreateTPButton("3. Teleport ke GL", function()
+    return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.WallDecor2["1"]
+end)
+
+CreateTPButton("4. Teleport ke Salon", function()
+    return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.BTScreen["2"]
+end)
+
+CreateTPButton("5. Teleport ke Marmer", function()
+    return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.KitchenIsland1["2"]
+end)
+
+CreateTPButton("6. Teleport ke Lemari", function()
+    return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.Shelf2["1"]
+end)
+
+CreateTPButton("7. Teleport ke Lampu", function()
+    return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.Lamp4["2"]
+end)
+
+CreateTPButton("8. Teleport ke Meja", function()
+    return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.Table2["2"]
+end)
+
+CreateTPButton("9. Teleport ke Toilet", function()
+    return game:GetService("Workspace").Wyposazenie.MarketWyposazenie.WashingMachine1["1"]
+end)
